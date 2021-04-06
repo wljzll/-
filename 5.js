@@ -61,7 +61,7 @@ let cloned = clone(obj);
 console.log(cloned.obj);
 
 
-// 完成版
+// 完整版
 let obj = {
     married: true,
     age: 10,
