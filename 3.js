@@ -29,7 +29,7 @@
 
 // 第三种 函数柯里化
 function curry(fn, ...args) {
-    console.log(args, '====');
+    console.log(arguments, '====');
     return args.length < fn.length ? (...innerArgs) => curry(fn, ...args, ...innerArgs) : fn(...args);
 }
 
@@ -37,8 +37,13 @@ function addFn(a, b, c, d, e) {
     return a + b + c + d + e;
 }
 let add = curry(addFn); // (...innerArgs) => curry(fn, ...args, ...innerArgs)
-console.log(add(1, 2, 3, 4, 5));
-console.log(add(1)(2)(3)(4)(5));
-console.log(add(1, 2)(3, 4, 5));
+// console.log(add(1, 2, 3, 4, 5));
+
+// console.log(add(1)(2)(3)(4)(5));
+// console.log(add(1, 2)(3, 4, 5));
 
 // add(1)
+
+function curry(fn, ...args) {
+    return args.length > fn.length ? () => curry(fn, ...args, ...innerArgs) : fn(...args);
+}

@@ -91,28 +91,27 @@ console.log(axiosPoint instanceof YPoint);
 
 // ft.bind(obj)
 
-
 // call
-~function () {
-    /**
-     * 
-     * @param {*} context : call的第一个参数，将调用call方法的函数中的this
-     * 指向context 
-     */
-    function call(context) {
-        // 如果未给call方法传递this指向的函数，默认指向window
-        context = context || window
-        let argus = [],
-            result;
-        // 参数的第二项才是函数的参数
-        for (let i = 1; i < arguments.length; i++) {
-            argus.push(arguments[i]);
-        }
-        context.$fn = this;
-        result = context.$fn(...argus);
-        delete context.$fn;
-
+~(function () {
+  /**
+   *
+   * @param {*} context : call的第一个参数，将调用call方法的函数中的this
+   * 指向context
+   */
+  function call(context) {
+    // 如果未给call方法传递this指向的函数，默认指向window
+    context = context || window;
+    let argus = [],
+      result;
+    // 参数的第二项才是函数的参数
+    for (let i = 1; i < arguments.length; i++) {
+      argus.push(arguments[i]);
     }
-    // 扩展到内置类的原型上
-    Function.prototype.call = call;
-}()
+    context.$fn = this;
+    result = context.$fn(...argus);
+    delete context.$fn;
+  }
+  // 扩展到内置类的原型上
+  Function.prototype.call = call;
+})();
+// f1.call.call(fn2)
