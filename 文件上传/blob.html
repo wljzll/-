@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let debug = { name: "zhufeng" };
+      let str = JSON.stringify(debug);
+      console.log(str);
+      let blob = new Blob([str], {
+        type: "application/json",
+      });
+      console.log(blob);
+
+      //  同样一个blob可以被读成各种类型
+      function readBlob(blob, type) {
+        return new Promise((resolve, reject) => {
+          let reader = new FileReader();
+          reader.onload = function (event) {
+            resolve(event.target.result);
+          };
+          switch (type) {
+            case "ArrayBuffer":
+              reader.readAsArrayBuffer(blob);
+              break;
+            case "DataURL": // 转成可读的字符串 base64字符串
+              reader.readAsDataURL(blob);
+              break;
+            case "Text":
+              reader.readAsText(blob);
+              break;
+            default:
+              break;
+          }
+        });
+      }
+
+      readBlob(blob, 'ArrayBuffer').then(result => {
+          console.log(result);
+      });
+      readBlob(blob, 'DataURL').then(result => {
+          console.log(result); // data:application/json;base64,eyJuYW1lIjoiemh1ZmVuZyJ9
+      });
+      readBlob(blob, 'Text').then(result => {
+          console.log(result); // {"name":"zhufeng"}
+      });
+    </script>
+  </body>
+</html>

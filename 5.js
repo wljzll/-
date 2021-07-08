@@ -89,16 +89,25 @@ obj.obj = obj;
 function getType(source) {
     return Object.prototype.toString.call(source);
 }
+// 获取所有的引用类型的 类型格式
 let OBJECT_TYPES = [{},
     [], new Map(), new Set(), new Error(), new Date(), /^$/
-].map(item => getType(item));
+].map(item => getType(item)); // ['[object Object]','[object Array]','[object Map]','[object Set]','[object Error]','[object Date]','[object RegExp]']
+  
 
-const MAP_TYPE = getType(new Map());
-const SET_TYPE = getType(new Set());
+// 获取map数据结构的 类型格式
+const MAP_TYPE = getType(new Map()); // [object Map] 
+// 获取set数据结构的 类型格式
+const SET_TYPE = getType(new Set()); // [object Set]
+
 // Error 和 Date可以直接 new 
-const CONSTRUCT_TYPE = [new Error(), new Date()].map(item => getType(item));
-const SYMBOL_TYPE = getType(Symbol('1'));
-const REGEXP_TYPE = getType(/^$/);
+const CONSTRUCT_TYPE = [new Error(), new Date()].map(item => getType(item)); // [ '[object Error]', '[object Date]' ]
+
+const SYMBOL_TYPE = getType(Symbol('1')); // [object Symbol]
+
+
+const REGEXP_TYPE = getType(/^$/);// [object RegExp]
+
 
 function clone(source, map = new Map()) {
     // 获取source的类型
@@ -111,15 +120,18 @@ function clone(source, map = new Map()) {
     if (map.get(source)) {
         return map.get(source);
     }
+    // 如果时Error/Date实例，可以通过直接 new 创建对应的克隆值
     if (CONSTRUCT_TYPE.includes(type)) {
         return new source.constructor(source);
     }
     let target = new source.constructor();
     map.set(source, target);
-
+    
+    // symbol数据类型的处理
     if (SYMBOL_TYPE === type) {
         return Object(Symbol.prototype.valueOf.call(source));
     }
+    // 正则类型的处理
     if (REGEXP_TYPE === type) {
         const flags = /\w*$/;
         const target = new source.constructor(source.source, flags.exec(source));
@@ -127,12 +139,14 @@ function clone(source, map = new Map()) {
         target.lastIndex = source.lastIndex;
         return target;
     }
+    // set类型处理
     if (SET_TYPE === type) {
         source.forEach(value => {
             target.add(clone(value, map));
         });
         return target;
     }
+    // map类型的处理
     if (MAP_TYPE === type) {
         source.forEach((value, key) => {
             target.set(key, clone(value, map));

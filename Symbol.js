@@ -118,7 +118,7 @@
 //     [Symbol.iterator]: Array.prototype[Symbol.iterator]
 // }
 // for (const iterator of obj) {
-//     console.log(iterator); // TypeError: obj is not iterable
+//     console.log(iterator); // zf 10
 // }
 
 // Symbol.toPrimitive
